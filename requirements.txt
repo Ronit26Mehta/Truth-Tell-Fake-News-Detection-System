@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+requests
+pydantic
+torch
+transformers
+pandas
+numpy
+scikit-learn
+plotly
+streamlit
+matplotlib
+wordcloud
+nltk
