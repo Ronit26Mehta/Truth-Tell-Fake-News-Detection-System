@@ -12,7 +12,7 @@ import re
 
 app = FastAPI()
 
-# Load BERT model
+
 class BERTModel:
     def __init__(self, model_name='distilbert-base-uncased', num_labels=2, model_path=r'C:\truthtell_Tech4Stack\bert_model.pth'):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -44,10 +44,10 @@ class BERTModel:
 
         return predicted_class
 
-# Load the BERT model
-bert_model = BERTModel(model_path=r'C:\truthtell_Tech4Stack\bert_model.pth')  # Path to your saved BERT model
 
-# Preprocessor Class for text cleaning (same as in the original code)
+bert_model = BERTModel(model_path=r'C:\truthtell_Tech4Stack\bert_model.pth')  
+
+
 class TextPreprocessor:
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()
@@ -55,20 +55,20 @@ class TextPreprocessor:
     
     def clean_text(self, text):
         text = text.lower()
-        text = re.sub(r'<[^>]+>', '', text)  # Remove HTML tags
-        text = re.sub(r'http\S+|www\S+|https\S+', '', text)  # Remove URLs
-        text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
-        text = re.sub(r'\d+', '', text)  # Remove digits
-        tokens = word_tokenize(text)  # Tokenize
-        tokens = [token for token in tokens if token not in self.stop_words]  # Remove stopwords
-        tokens = [self.lemmatizer.lemmatize(token) for token in tokens]  # Lemmatize
+        text = re.sub(r'<[^>]+>', '', text)  
+        text = re.sub(r'http\S+|www\S+|https\S+', '', text)  
+        text = re.sub(r'[^\w\s]', '', text)  
+        text = re.sub(r'\d+', '', text)  
+        tokens = word_tokenize(text)  
+        tokens = [token for token in tokens if token not in self.stop_words]  
+        tokens = [self.lemmatizer.lemmatize(token) for token in tokens]  
         return ' '.join(tokens)
 
-# Request body for user input
-class PredictionRequest(BaseModel):
-    text: str  # Text input for prediction
 
-# Prediction endpoint for BERT Model
+class PredictionRequest(BaseModel):
+    text: str  
+
+
 @app.post("/predict_bert")
 def predict_bert(user_input: PredictionRequest):
     """
@@ -81,12 +81,12 @@ def predict_bert(user_input: PredictionRequest):
     preprocessor = TextPreprocessor()
     cleaned_text = preprocessor.clean_text(user_input.text)
 
-    # Make prediction
+    
     predicted_label = bert_model.predict(cleaned_text)
 
     return {"text": user_input.text, "predicted_label": predicted_label}
 
-# Run the FastAPI application
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=8003)

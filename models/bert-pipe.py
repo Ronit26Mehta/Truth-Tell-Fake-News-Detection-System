@@ -14,12 +14,11 @@ from torch.utils.data import Dataset, DataLoader
 import warnings
 warnings.filterwarnings('ignore')
 
-# Download required NLTK data
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# Preprocessor Class
 class TextPreprocessor:
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()
@@ -36,22 +35,22 @@ class TextPreprocessor:
         tokens = [self.lemmatizer.lemmatize(token) for token in tokens]
         return ' '.join(tokens)
 
-# Load datasets
+
 def load_datasets():
     train_df = pd.read_csv('Datasets/train.csv')
     valid_df = pd.read_csv('Datasets/valid.csv')
     test_df = pd.read_csv('Datasets/test.csv')
 
-    # Combine train and validation datasets
+    
     train_df = pd.concat([train_df, valid_df], ignore_index=True)
 
-    # Extract features and labels
+    
     X_train, y_train = train_df['statement'], train_df['label']
     X_test, y_test = test_df['statement'], test_df['label']
 
     return X_train, X_test, y_train, y_test
 
-# Dataset class for BERT
+
 class BERTDataset(Dataset):
     def __init__(self, texts, labels=None, tokenizer=None, max_length=512):
         self.texts = texts
@@ -80,7 +79,7 @@ class BERTDataset(Dataset):
             item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
         return item
 
-# BERT Model
+
 class BERTModel:
     def __init__(self, model_name='distilbert-base-uncased'):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -149,16 +148,16 @@ def evaluate_model(y_true, y_pred, model_name):
     print(confusion_matrix(y_true, y_pred))
 
 def main():
-    # Load datasets
+    
     X_train, X_test, y_train, y_test = load_datasets()
 
-    # BERT Training
+    
     print("\nTraining BERT Model...")
     bert_model = BERTModel()
     bert_model.train(X_train.values, y_train.values)
     bert_model.save("bert_model.pth")
 
-    # BERT Evaluation
+    
     print("\nEvaluating BERT Model...")
     y_pred_bert = bert_model.predict(X_test.values)
     evaluate_model(y_test, y_pred_bert, "BERT")
