@@ -1,0 +1,62 @@
+graph TD
+    subgraph Client
+        A[User]
+        B[Frontend - Streamlit]
+    end
+
+    subgraph Server
+        subgraph Backend
+            C[FastAPI]
+            D[backend.py]
+            E[backend-bert.py]
+        end
+
+        subgraph Models
+            F[Logistic Regression]
+            G[Naive Bayes]
+            H[SVM]
+            I[BERT]
+        end
+
+        subgraph Data
+            J[train.csv]
+            K[test.csv]
+            L[valid.csv]
+        end
+    end
+
+    subgraph Outputs
+        M[Logistic-regression.png]
+        N[naive-bayes.png]
+        O[svm.png]
+        P[bert.png]
+    end
+
+    A -->|Interacts with| B
+    B -->|Sends request to| C
+    C -->|Handles traditional ML| D
+    C -->|Handles BERT operations| E
+    D -->|Uses| F
+    D -->|Uses| G
+    D -->|Uses| H
+    E -->|Uses| I
+    F -->|Trained on| J
+    G -->|Trained on| J
+    H -->|Trained on| J
+    I -->|Trained on| J
+    F -->|Evaluated on| K
+    G -->|Evaluated on| K
+    H -->|Evaluated on| K
+    I -->|Evaluated on| K
+    F -->|Validated on| L
+    G -->|Validated on| L
+    H -->|Validated on| L
+    I -->|Validated on| L
+    F -->|Generates| M
+    G -->|Generates| N
+    H -->|Generates| O
+    I -->|Generates| P
+    B -->|Displays| M
+    B -->|Displays| N
+    B -->|Displays| O
+    B -->|Displays| P
