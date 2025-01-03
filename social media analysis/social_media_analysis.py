@@ -1,4 +1,3 @@
-# filepath: backend/social_media_analysis.py
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
@@ -13,7 +12,6 @@ def sentiment_analysis(text):
     blob = TextBlob(text)
     return blob.sentiment.polarity
 
-# Example usage
 texts = ["This is a test message", "Another test message"]
 clusters = identify_echo_chambers(texts)
 sentiments = [sentiment_analysis(text) for text in texts]
