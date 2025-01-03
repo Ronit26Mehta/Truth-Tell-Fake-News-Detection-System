@@ -12,3 +12,9 @@ streamlit
 matplotlib
 wordcloud
 nltk
+flask
+yfinance
+tensorflow
+textblob
+neo4j
+py2neo
