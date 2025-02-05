@@ -11,9 +11,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import re
 
-
 BASE_URL = "http://localhost:8002"  
-
 
 class TextPreprocessor:
     def __init__(self):
@@ -30,7 +28,6 @@ class TextPreprocessor:
         tokens = [token for token in tokens if token not in self.stop_words]  
         tokens = [self.lemmatizer.lemmatize(token) for token in tokens]  
         return ' '.join(tokens)
-
 
 def homepage():
     st.markdown(
@@ -60,7 +57,6 @@ def homepage():
     st.markdown('<p class="app-description">Choose a model, enter your text, and see the prediction results along with insightful visualizations.</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 def model_selection_page():
     st.markdown(
         """
@@ -86,12 +82,9 @@ def model_selection_page():
         st.write(f"You have selected the **{model}** model.")
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 def model_input_page():
     st.title(f"{st.session_state.selected_model} Model")
     st.write("Enter the text you want to classify:")
-
-    
     user_input = st.text_area("Text input", height=200)
 
     if user_input:
@@ -103,11 +96,9 @@ def model_input_page():
         elif st.session_state.selected_model == "SVM":
             response = requests.post(f"{BASE_URL}/predict_svm", json={"text": user_input})
 
-        
         if response.status_code == 200:
             prediction = response.json()["predicted_label"]
             st.write(f"Predicted label: {prediction}")
-
             
             st.subheader("Word Cloud")
             wordcloud = WordCloud(width=600, height=400, background_color='white').generate(user_input)
@@ -116,13 +107,11 @@ def model_input_page():
             plt.axis('off')
             st.pyplot(fig_wordcloud)
 
-            
             data = {"Model": [st.session_state.selected_model], "Prediction": [prediction]}
             df = pd.DataFrame(data)
             fig = px.bar(df, x="Model", y="Prediction", title="Model Prediction")
             st.plotly_chart(fig)
 
-            
             tfidf_vectorizer = TfidfVectorizer(max_features=10)
             tfidf_matrix = tfidf_vectorizer.fit_transform([user_input])
             tfidf_scores = np.array(tfidf_matrix.sum(axis=0)).flatten()
@@ -131,7 +120,6 @@ def model_input_page():
             fig_tfidf = px.bar(tfidf_data, x="Feature", y="TF-IDF Score", title="Top 10 TF-IDF Features")
             st.plotly_chart(fig_tfidf)
 
-            
             text_length = len(user_input.split())
             st.subheader("Text Length Distribution")
             st.write(f"Number of words in input text: {text_length}")
@@ -141,11 +129,8 @@ def model_input_page():
         else:
             st.error("Error in prediction, please try again!")
 
-
 def main():
     st.set_page_config(page_title="Fake News Classifier App", layout="wide")
-
-    
     page = st.sidebar.radio("Select a Page", ("Home", "Model Selection", "Model Input"))
 
     if page == "Home":
